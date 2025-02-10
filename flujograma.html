@@ -40,16 +40,13 @@
             margin-top: 10px;
             padding: 5px;
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
 
 <h2>Flujograma Interactivo</h2>
 
-<div class="mermaid" id="flujograma">
+<div class="mermaid">
     graph TD;
         A[Estafas] -->|Click para más info| B[Especial complejidad técnica];
         A --> M[Medios de comunicación utilizados];
@@ -87,40 +84,18 @@
         // Renderizar el diagrama Mermaid
         mermaid.init(undefined, document.querySelectorAll(".mermaid"));
 
-        // Esperar a que los nodos se generen y agregar eventos
+        // Añadir eventos de clic a los nodos
         setTimeout(() => {
-            const nodes = document.querySelectorAll(".mermaid .node");
+            const nodes = document.querySelectorAll(".node");
             nodes.forEach(node => {
+                node.style.cursor = "pointer";
                 node.addEventListener("click", () => {
                     const nodeName = node.querySelector("text").textContent;
-                    handleNodeClick(nodeName);
+                    showPopup(getPopupContent(nodeName));
                 });
             });
-        }, 500); // Tiempo de espera para asegurar que Mermaid haya terminado
+        }, 500);
     });
-
-    function handleNodeClick(nodeName) {
-        const branches = {
-            "Especial complejidad técnica": ["C", "D"],
-            "No": ["E", "F", "G"],
-            "Sí": ["H", "I", "J", "K", "L"],
-        };
-
-        if (branches[nodeName]) {
-            toggleBranchVisibility(branches[nodeName]);
-        } else {
-            showPopup(getPopupContent(nodeName));
-        }
-    }
-
-    function toggleBranchVisibility(branchNodes) {
-        branchNodes.forEach(nodeId => {
-            const nodeElement = document.querySelector(`[id='${nodeId}']`);
-            if (nodeElement) {
-                nodeElement.classList.toggle("hidden");
-            }
-        });
-    }
 
     function showPopup(content) {
         const popup = document.getElementById("nodePopup");
@@ -134,20 +109,15 @@
 
     function getPopupContent(nodeName) {
         const info = {
-            "Medios de comunicación utilizados": "<b>Facebook:</b> Revisar publicaciones sospechosas.<br><b>Instagram:</b> Verificar perfiles falsos.<br><b>WhatsApp:</b> Bloquear números no reconocidos.<br><b>Llamada Telefónica:</b> No compartir información personal.<br><b>Página Falsa:</b> Reportar sitios sospechosos.<br><b>Correo electrónico:</b> No hacer clic en enlaces desconocidos.",
-            "Facebook": "Verificar publicaciones y reportar contenido inapropiado o sospechoso.",
-            "Instagram": "Identificar y bloquear cuentas falsas.",
-            "WhatsApp": "Evitar responder mensajes de números desconocidos.",
-            "Llamada Telefónica": "No brindar datos personales ni bancarios.",
-            "Página Falsa": "Verificar la URL y cerrar la página inmediatamente si es sospechosa.",
-            "Correo electrónico": "Eliminar correos que pidan datos personales o financieros."
+            "Medios de comunicación utilizados": "Información sobre los medios utilizados...",
+            "Especial complejidad técnica": "Este nodo representa...",
+            "¿Es horario hábil?": "Dependiendo de la respuesta, se sigue uno u otro camino."
         };
-        return info[nodeName] || "Información no disponible.";
+        return info[nodeName] || "Información no disponible para este nodo.";
     }
 </script>
 
 <p>Haga clic en <span class="highlight" data-info="La Fiscalía de Cibercrimen investiga delitos informáticos y fraudes digitales">Fiscalía de Cibercrimen</span> para más información.</p>
-<p>Haga clic en <span class="highlight" data-info="COELSA es la Cámara de Compensación Electrónica de Argentina que gestiona transacciones bancarias">COELSA</span> para más información.</p>
 
 </body>
 </html>
