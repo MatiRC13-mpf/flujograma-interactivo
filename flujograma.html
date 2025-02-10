@@ -3,121 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flujograma Interactivo</title>
+    <title>Flujograma con Mermaid.js</title>
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ startOnLoad: true });
     </script>
-    <style>
-        .tooltip {
-            display: none;
-            position: absolute;
-            background: white;
-            border: 1px solid black;
-            padding: 10px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-            max-width: 300px;
-        }
-        .highlight {
-            color: blue;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .node-popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid black;
-            padding: 20px;
-            box-shadow: 3px 3px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-        .node-popup button {
-            display: block;
-            margin-top: 10px;
-            padding: 5px;
-        }
-    </style>
 </head>
 <body>
 
-<h2>Flujograma Interactivo</h2>
+<h2>Flujograma de Ejemplo</h2>
 
 <div class="mermaid">
     graph TD;
-        A[Estafas] -->|Click para más info| B[Especial complejidad técnica];
-        A --> M[Medios de comunicación utilizados];
-        M -->|Click aquí para más info| M1[Facebook, Instagram, WhatsApp, Llamada Telefónica, Página Falsa, Correo electrónico];
+        A[Estafas] --> B{¿Especial complejidad técnica?}
+    
+    B -- Sí --> C[Comunicar a Fiscalía de Cibercrimen y a Fiscalía D2T7]
+    C --> D{¿Es mayor a un millón de pesos?}
+    
+    B -- No --> E[Comunicar a Fiscalía D2T7]
+    E --> F[Solicitar a Fiscalía Levantamiento Secreto Bancario y Bloqueo de fondos]
+    F --> G[Oficio para informe del banco/billetera del damnificado]
+    
+    D -- No --> H[Solicitar a FEC Levantamiento Secreto Bancario y Bloqueo de fondos]
+    H --> I[Oficio para informe del banco/billetera del damnificado]
 
-        B -- Sí --> C[Comunicar a Fiscalía de Cibercrimen y a Fiscalía D2T7]
-        B -- No --> E[Comunicar a Fiscalía D2T7]
+    D -- Sí --> J{¿Es horario hábil?}
+    J -- Sí --> K[Solicitar a FEC Levantamiento Secreto Bancario, Bloqueo de fondos y Bloqueo CUIL por Coelsa con trazabilidad]
+    K --> L[Oficio para informe del banco/billetera del damnificado]
 
-        C --> D[¿Es mayor a un millón de pesos?]
-        D -- No --> H[Solicitar a FEC Levantamiento Secreto Bancario y Bloqueo de fondos]
-        H --> I[Oficio para informe del banco o billetera del damnificado]
-
-        D -- Sí --> J[¿Es horario hábil?]
-        J -- Sí --> K[Solicitar a FEC Levantamiento Secreto Bancario, Bloqueo de fondos y Bloqueo CUIL por Coelsa con trazabilidad]
-        K --> L[Oficio para informe del banco o billetera del damnificado]
-
-        J -- No --> N[Avisar a Secretaría de FEC]
-        N --> O[Incorporar certificado que autoriza]
-        O --> P[Realizar Oficio de Levantamiento de Secreto Bancario y Bloqueo de Fondos]
-        P --> Q[Oficio para Bloqueo de COELSA]
-        Q --> R[Comunicarlo a UJ Delitos Económicos para que carguen en la plataforma]
+    J -- No --> M[Avisar a Secretaría de FEC]
+    M --> N[Incorporar certificado que autoriza]
+    N --> O[Realizar Oficio de Levantamiento de Secreto Bancario y Bloqueo de Fondos]
+    O --> P[Oficio para Bloqueo de COELSA]
+    P --> Q[Comunicarlo a UJ Delitos Económicos para que carguen en la plataforma]
 </div>
-
-<!-- Contenedor para mostrar información adicional -->
-<div id="tooltip" class="tooltip"></div>
-
-<!-- Nodo emergente -->
-<div id="nodePopup" class="node-popup">
-    <p id="popupContent"></p>
-    <button onclick="closePopup()">Cerrar</button>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // Renderizar el diagrama Mermaid
-        mermaid.init(undefined, document.querySelectorAll(".mermaid"));
-
-        // Añadir eventos de clic a los nodos
-        setTimeout(() => {
-            const nodes = document.querySelectorAll(".node");
-            nodes.forEach(node => {
-                node.style.cursor = "pointer";
-                node.addEventListener("click", () => {
-                    const nodeName = node.querySelector("text").textContent;
-                    showPopup(getPopupContent(nodeName));
-                });
-            });
-        }, 500);
-    });
-
-    function showPopup(content) {
-        const popup = document.getElementById("nodePopup");
-        document.getElementById("popupContent").innerHTML = content;
-        popup.style.display = "block";
-    }
-
-    function closePopup() {
-        document.getElementById("nodePopup").style.display = "none";
-    }
-
-    function getPopupContent(nodeName) {
-        const info = {
-            "Medios de comunicación utilizados": "Información sobre los medios utilizados...",
-            "Especial complejidad técnica": "Este nodo representa...",
-            "¿Es horario hábil?": "Dependiendo de la respuesta, se sigue uno u otro camino."
-        };
-        return info[nodeName] || "Información no disponible para este nodo.";
-    }
-</script>
-
-<p>Haga clic en <span class="highlight" data-info="La Fiscalía de Cibercrimen investiga delitos informáticos y fraudes digitales">Fiscalía de Cibercrimen</span> para más información.</p>
 
 </body>
 </html>
